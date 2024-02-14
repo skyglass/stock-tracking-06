@@ -1,0 +1,297 @@
+server:
+  netty:
+    connection-timeout: 20s
+    idle-timeout: 15s
+  shutdown: graceful
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: gateway
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+  cloud:
+    bootstrap:
+      enabled: true
+    loadbalancer:
+      ribbon:
+        enabled: false
+    gateway:
+      httpclient:
+        connect-timeout: 2000 # 2s
+        response-timeout: 20s
+        pool:
+          type: elastic
+          max-idle-time: 15s
+          max-life-time: 60s
+      default-filters:
+        - SaveSession
+        - TokenRelay
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin Access-Control-Request-Headers, RETAIN_FIRST
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter:
+              replenishRate: 10
+              burstCapacity: 20
+              requestedTokens: 1
+        - name: Retry
+          args:
+            retries: 3
+            methods: GET
+            series: SERVER_ERROR
+            exceptions: java.io.IOException, java.util.concurrent.TimeoutException
+            backoff:
+              firstBackoff: 50ms
+              maxBackOff: 500ms
+              factor: 2
+              basedOnPreviousValue: false
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: anaylytics
+          uri: ${ANALYTICS_SERVICE_URL:http://localhost:9001}
+          predicates:
+            - Path=/analytics/**
+          filters:
+            - RewritePath=/analytics/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: analyticsCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: basket
+          uri: ${BASKET_SERVICE_URL:http://localhost:9002}
+          predicates:
+            - Path=/basket/**
+          filters:
+            - RewritePath=/basket/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: basketCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: basket2
+          uri: ${BASKET2_SERVICE_URL:http://localhost:9007}
+          predicates:
+            - Path=/basket2/**
+          filters:
+            - RewritePath=/basket2/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: basketCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: basket3
+          uri: ${BASKET3_SERVICE_URL:http://localhost:9008}
+          predicates:
+            - Path=/basket3/**
+          filters:
+            - RewritePath=/basket3/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: basketCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: catalog-command
+          uri: ${CATALOG_COMMAND_SERVICE_URL:http://localhost:9003}
+          predicates:
+            - Path=/catalog-command/**
+          filters:
+            - RewritePath=/catalog-command/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: catalogCommandCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: catalog-command2
+          uri: ${CATALOG_COMMAND2_SERVICE_URL:http://localhost:9011}
+          predicates:
+            - Path=/catalog-command2/**
+          filters:
+            - RewritePath=/catalog-command2/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: catalogCommandCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: catalog-command3
+          uri: ${CATALOG_COMMAND3_SERVICE_URL:http://localhost:9012}
+          predicates:
+            - Path=/catalog-command3/**
+          filters:
+            - RewritePath=/catalog-command3/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: catalogCommandCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+
+        - id: catalog-query
+          uri: ${CATALOG_QUERY_SERVICE_URL:http://localhost:9004}
+          predicates:
+            - Path=/catalog-query/**
+          filters:
+            - RewritePath=/catalog-query/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: catalogQueryCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: catalog-query2
+          uri: ${CATALOG_QUERY2_SERVICE_URL:http://localhost:9009}
+          predicates:
+            - Path=/catalog-query2/**
+          filters:
+            - RewritePath=/catalog-query2/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: catalogQueryCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: order-processing
+          uri: ${ORDER_PROCESSING_SERVICE_URL:http://localhost:9005}
+          predicates:
+            - Path=/order-processing/**
+          filters:
+            - RewritePath=/order-processing/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: orderProcessingCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: order-processing2
+          uri: ${ORDER_PROCESSING2_SERVICE_URL:http://localhost:9010}
+          predicates:
+            - Path=/order-processing2/**
+          filters:
+            - RewritePath=/order-processing2/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: orderProcessingCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+  redis:
+    connect-timeout: 20s
+    host: localhost
+    port: 6380
+    timeout: 20s
+  session:
+    store-type: redis
+    timeout: 10m
+    redis:
+      namespace: stock:gateway
+
+  keycloak:
+    server-url: http://localhost:8080
+    server-external-url: http://localhost:8080
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${spring.keycloak.server-external-url}/realms/stock-realm
+          jwk-set-uri: ${spring.keycloak.server-url}/realms/stock-realm/protocol/openid-connect/certs
+
+jwt:
+  auth:
+    converter:
+      resource-id: stock-app
+      principal-attribute: preferred_username
+
+stock-app:
+  base-url: http://localhost:9000
+  redirect-url: ${stock-app.base-url}/*
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 20
+        permittedNumberOfCallsInHalfOpenState: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 15000
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 20s
+
+logging:
+  group:
+    circuitbreaker: io.github.resilience4j, org.springframework.cloud.circuitbreaker
+  pattern: 
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+  level:
+    circuitbreaker: info
+    org.springframework.cloud.kubernetes: TRACE
+
+info:
+  system: Gateway Service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bindings, configprops, env, flyway, functions, health, heapdump, info, loggers, mappings, prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    # groups-order: DESC
+    path: /
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      # - url: /v3/api-docs
+      #   name: API Gateway Service
+      #   primaryName: API Gateway Service
+      - url: /analytics/v3/api-docs
+        name: Analytics Service
+      - url: /basket/v3/api-docs
+        name: Basket Service
+      - url: /basket2/v3/api-docs
+        name: Basket2 Service
+      - url: /basket3/v3/api-docs
+        name: Basket3 Service
+      - url: /catalog-command/v3/api-docs
+        name: Catalog Command Service
+      - url: /catalog-command2/v3/api-docs
+        name: Catalog Command2 Service
+      - url: /catalog-command3/v3/api-docs
+        name: Catalog Command3 Service
+      - url: /catalog-query/v3/api-docs
+        name: Catalog Query Service
+      - url: /catalog-query2/v3/api-docs
+        name: Catalog Query2 Service
+      - url: /order-processing/v3/api-docs
+        name: Order Processing Service
+      - url: /order-processing2/v3/api-docs
+        name: Order Processing2 Service
+      - url: /payment/v3/api-docs
+        name: Payment Service
