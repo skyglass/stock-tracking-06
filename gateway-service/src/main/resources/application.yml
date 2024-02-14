@@ -57,132 +57,88 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: anaylytics
-          uri: ${ANALYTICS_SERVICE_URL:http://localhost:9001}
+        - id: customer
+          uri: ${CUSTOMER_SERVICE_URL:http://localhost:9001}
           predicates:
-            - Path=/analytics/**
+            - Path=/customer/**
           filters:
-            - RewritePath=/analytics/(?<path>.*), /$\{path}
+            - RewritePath=/customer/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
-                name: analyticsCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: basket
-          uri: ${BASKET_SERVICE_URL:http://localhost:9002}
-          predicates:
-            - Path=/basket/**
-          filters:
-            - RewritePath=/basket/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: basketCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: basket2
-          uri: ${BASKET2_SERVICE_URL:http://localhost:9007}
-          predicates:
-            - Path=/basket2/**
-          filters:
-            - RewritePath=/basket2/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: basketCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: basket3
-          uri: ${BASKET3_SERVICE_URL:http://localhost:9008}
-          predicates:
-            - Path=/basket3/**
-          filters:
-            - RewritePath=/basket3/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: basketCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: catalog-command
-          uri: ${CATALOG_COMMAND_SERVICE_URL:http://localhost:9003}
-          predicates:
-            - Path=/catalog-command/**
-          filters:
-            - RewritePath=/catalog-command/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: catalogCommandCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: catalog-command2
-          uri: ${CATALOG_COMMAND2_SERVICE_URL:http://localhost:9011}
-          predicates:
-            - Path=/catalog-command2/**
-          filters:
-            - RewritePath=/catalog-command2/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: catalogCommandCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: catalog-command3
-          uri: ${CATALOG_COMMAND3_SERVICE_URL:http://localhost:9012}
-          predicates:
-            - Path=/catalog-command3/**
-          filters:
-            - RewritePath=/catalog-command3/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: catalogCommandCircuitBreaker
+                name: customerCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
 
-        - id: catalog-query
-          uri: ${CATALOG_QUERY_SERVICE_URL:http://localhost:9004}
+        - id: order
+          uri: ${ORDER_SERVICE_URL:http://localhost:9002}
           predicates:
-            - Path=/catalog-query/**
+            - Path=/order/**
           filters:
-            - RewritePath=/catalog-query/(?<path>.*), /$\{path}
+            - RewritePath=/order/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
-                name: catalogQueryCircuitBreaker
+                name: orderCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
-        - id: catalog-query2
-          uri: ${CATALOG_QUERY2_SERVICE_URL:http://localhost:9009}
+        - id: order2
+          uri: ${ORDER2_SERVICE_URL:http://localhost:9003}
           predicates:
-            - Path=/catalog-query2/**
+            - Path=/order2/**
           filters:
-            - RewritePath=/catalog-query2/(?<path>.*), /$\{path}
+            - RewritePath=/order2/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
-                name: catalogQueryCircuitBreaker
+                name: orderCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
-        - id: order-processing
-          uri: ${ORDER_PROCESSING_SERVICE_URL:http://localhost:9005}
+        - id: order3
+          uri: ${ORDER3_SERVICE_URL:http://localhost:9004}
           predicates:
-            - Path=/order-processing/**
+            - Path=/order3/**
           filters:
-            - RewritePath=/order-processing/(?<path>.*), /$\{path}
+            - RewritePath=/order3/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
-                name: orderProcessingCircuitBreaker
+                name: orderCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
-        - id: order-processing2
-          uri: ${ORDER_PROCESSING2_SERVICE_URL:http://localhost:9010}
+        - id: product
+          uri: ${PRODUCT_SERVICE_URL:http://localhost:9005}
           predicates:
-            - Path=/order-processing2/**
+            - Path=/product/**
           filters:
-            - RewritePath=/order-processing2/(?<path>.*), /$\{path}
+            - RewritePath=/product/(?<path>.*), /$\{path}
             - name: CircuitBreaker
               args:
-                name: orderProcessingCircuitBreaker
+                name: productCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: product2
+          uri: ${PRODUCT2_SERVICE_URL:http://localhost:9006}
+          predicates:
+            - Path=/product2/**
+          filters:
+            - RewritePath=/product2/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: productCircuitBreaker
+                fallbackUri: forward:/stock-fallback
+
+        - id: product3
+          uri: ${PRODUCT3_SERVICE_URL:http://localhost:9007}
+          predicates:
+            - Path=/product3/**
+          filters:
+            - RewritePath=/product3/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: productCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
   redis:
     connect-timeout: 20s
     host: localhost
-    port: 6380
+    port: 6379
     timeout: 20s
   session:
     store-type: redis
@@ -271,27 +227,17 @@ springdoc:
       # - url: /v3/api-docs
       #   name: API Gateway Service
       #   primaryName: API Gateway Service
-      - url: /analytics/v3/api-docs
-        name: Analytics Service
-      - url: /basket/v3/api-docs
-        name: Basket Service
-      - url: /basket2/v3/api-docs
-        name: Basket2 Service
-      - url: /basket3/v3/api-docs
-        name: Basket3 Service
-      - url: /catalog-command/v3/api-docs
-        name: Catalog Command Service
-      - url: /catalog-command2/v3/api-docs
-        name: Catalog Command2 Service
-      - url: /catalog-command3/v3/api-docs
-        name: Catalog Command3 Service
-      - url: /catalog-query/v3/api-docs
-        name: Catalog Query Service
-      - url: /catalog-query2/v3/api-docs
-        name: Catalog Query2 Service
-      - url: /order-processing/v3/api-docs
-        name: Order Processing Service
-      - url: /order-processing2/v3/api-docs
-        name: Order Processing2 Service
-      - url: /payment/v3/api-docs
-        name: Payment Service
+      - url: /customer/v3/api-docs
+        name: Customer Service
+      - url: /order/v3/api-docs
+        name: Order Service
+      - url: /product/v3/api-docs
+        name: Product Service
+      - url: /product2/v3/api-docs
+        name: Product2 Service
+      - url: /product3/v3/api-docs
+        name: Product3 Service
+      - url: /order2/v3/api-docs
+        name: Order2 Service
+      - url: /order3/v3/api-docs
+        name: Order3 Service
