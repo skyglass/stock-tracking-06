@@ -57,18 +57,6 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: customer
-          uri: ${CUSTOMER_SERVICE_URL:http://localhost:9001}
-          predicates:
-            - Path=/customer/**
-          filters:
-            - RewritePath=/customer/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: customerCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-
         - id: order
           uri: ${ORDER_SERVICE_URL:http://localhost:9002}
           predicates:
@@ -78,61 +66,6 @@ spring:
             - name: CircuitBreaker
               args:
                 name: orderCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: order2
-          uri: ${ORDER2_SERVICE_URL:http://localhost:9003}
-          predicates:
-            - Path=/order2/**
-          filters:
-            - RewritePath=/order2/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: orderCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: order3
-          uri: ${ORDER3_SERVICE_URL:http://localhost:9004}
-          predicates:
-            - Path=/order3/**
-          filters:
-            - RewritePath=/order3/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: orderCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: product
-          uri: ${PRODUCT_SERVICE_URL:http://localhost:9005}
-          predicates:
-            - Path=/product/**
-          filters:
-            - RewritePath=/product/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: productCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: product2
-          uri: ${PRODUCT2_SERVICE_URL:http://localhost:9006}
-          predicates:
-            - Path=/product2/**
-          filters:
-            - RewritePath=/product2/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: productCircuitBreaker
-                fallbackUri: forward:/stock-fallback
-
-        - id: product3
-          uri: ${PRODUCT3_SERVICE_URL:http://localhost:9007}
-          predicates:
-            - Path=/product3/**
-          filters:
-            - RewritePath=/product3/(?<path>.*), /$\{path}
-            - name: CircuitBreaker
-              args:
-                name: productCircuitBreaker
                 fallbackUri: forward:/stock-fallback
 
   redis:
@@ -227,17 +160,5 @@ springdoc:
       # - url: /v3/api-docs
       #   name: API Gateway Service
       #   primaryName: API Gateway Service
-      - url: /customer/v3/api-docs
-        name: Customer Service
       - url: /order/v3/api-docs
         name: Order Service
-      - url: /product/v3/api-docs
-        name: Product Service
-      - url: /product2/v3/api-docs
-        name: Product2 Service
-      - url: /product3/v3/api-docs
-        name: Product3 Service
-      - url: /order2/v3/api-docs
-        name: Order2 Service
-      - url: /order3/v3/api-docs
-        name: Order3 Service

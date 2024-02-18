@@ -167,6 +167,42 @@ services:
     networks:
       - stock
 
+  init-kafka:
+    image: confluentinc/cp-kafka:7.1.0
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # block until kafka is reachable
+      kafka-topics --bootstrap-server stock-kafka1:29092 --list
+
+      echo -e 'Deleting kafka topics'
+      kafka-topics --bootstrap-server stock-kafka1:29092 --topic stock-add-request --delete --if-exists
+      kafka-topics --bootstrap-server stock-kafka1:29092 --topic stock-add-response --delete --if-exists
+      kafka-topics --bootstrap-server stock-kafka1:29092 --topic stock-remove-request --delete --if-exists
+      kafka-topics --bootstrap-server stock-kafka1:29092 --topic stock-remove-response --delete --if-exists   
+      kafka-topics --bootstrap-server stock-kafka1:29092 --topic customer --delete --if-exists
+      kafka-topics --bootstrap-server stock-kafka1:29092 --topic debezium.order.stock_add_outbox --delete --if-exists
+      kafka-topics --bootstrap-server stock-kafka1:29092 --topic debezium.order.stock_remove_outbox --delete --if-exists
+      kafka-topics --bootstrap-server stock-kafka1:29092 --topic debezium.stock.stock_added_outbox --delete --if-exists
+      kafka-topics --bootstrap-server stock-kafka1:29092 --topic debezium.stock.stock_removed_outbox --delete --if-exists      
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic stock-add-request --replication-factor 2 --partitions 2
+      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic stock-add-response --replication-factor 2 --partitions 2
+      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic stock-remove-request --replication-factor 2 --partitions 2
+      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic stock-remove-response --replication-factor 2 --partitions 2      
+      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic customer --replication-factor 2 --partitions 2
+      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic debezium.order.stock_add_outbox --replication-factor 2 --partitions 2
+      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic debezium.order.stock_remove_outbox --replication-factor 2 --partitions 2
+      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic debezium.stock.stock_added_outbox --replication-factor 2 --partitions 2
+      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic debezium.stock.stock_removed_outbox --replication-factor 2 --partitions 2      
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server stock-kafka1:29092 --list
+      "
+    networks:
+      - stock
+
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui

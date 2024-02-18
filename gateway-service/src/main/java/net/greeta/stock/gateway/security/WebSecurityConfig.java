@@ -31,26 +31,8 @@ public class WebSecurityConfig {
                         .pathMatchers(HttpMethod.GET,"/v3/api-docs/**").permitAll()
                         .pathMatchers(HttpMethod.GET,"/favicon.ico").permitAll()
 
-                        .pathMatchers(HttpMethod.GET,"/customer/v3/api-docs/**").permitAll()
-                        .pathMatchers("/customer", "/customer/**").permitAll()
-
                         .pathMatchers(HttpMethod.GET,"/order/v3/api-docs/**").permitAll()
                         .pathMatchers("/order", "/order/**").permitAll()
-
-                        .pathMatchers(HttpMethod.GET,"/order2/v3/api-docs/**").permitAll()
-                        .pathMatchers("/order2", "/order2/**").permitAll()
-
-                        .pathMatchers(HttpMethod.GET,"/order3/v3/api-docs/**").permitAll()
-                        .pathMatchers("/order3", "/order3/**").permitAll()
-
-                        .pathMatchers(HttpMethod.GET,"/product/v3/api-docs/**").permitAll()
-                        .pathMatchers("/product", "/product/**").permitAll()
-
-                        .pathMatchers(HttpMethod.GET,"/product2/v3/api-docs/**").permitAll()
-                        .pathMatchers("/product2", "/product2/**").permitAll()
-
-                        .pathMatchers(HttpMethod.GET,"/product3/v3/api-docs/**").permitAll()
-                        .pathMatchers("/product3", "/product3/**").permitAll()
 
                         .anyExchange().authenticated()
                         .and()

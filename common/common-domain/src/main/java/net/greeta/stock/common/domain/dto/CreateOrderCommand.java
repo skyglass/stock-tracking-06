@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -15,5 +16,5 @@ public class CreateOrderCommand {
     @NotNull
     private final UUID customerId;
     @NotNull
-    private final BigDecimal amount;
+    private final List<OrderItem> items;
 }
