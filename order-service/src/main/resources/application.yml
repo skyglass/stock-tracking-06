@@ -16,21 +16,33 @@ spring:
     password: ${spring.r2dbc.password}
     url: ${spring.r2dbc.url}
 
-
+  keycloak:
+    server-url: http://localhost:8080
+    server-external-url: http://localhost:8080
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${spring.keycloak.server-external-url}/realms/stock-realm
+          jwk-set-uri: ${spring.keycloak.server-url}/realms/stock-realm/protocol/openid-connect/certs
 
   cloud:
     function:
-      definition: processor
+      definition: orderOrchestrator
     stream:
       default:
         producer:
           useNativeEncoding: true
       bindings:
-        processor-in-0:
+        orderOrchestrator-in-0:
+          destination: payment-response,inventory-response,shipping-response
+          group: order-service-group
+        payment-request-channel:
           destination: payment-request
-          group: customer-payment-group
-        processor-out-0:
-          destination: payment-response
+        inventory-request-channel:
+          destination: inventory-request
+        shipping-request-channel:
+          destination: shipping-request
       kafka:
         binder:
           consumer-properties:
@@ -46,6 +58,17 @@ app:
   postgres:
     host: stock-postgres
     port: 5432
-    database: customerpaymentdb
-    user: customerpaymentdbuser
+    database: orderdb
+    user: orderdbuser
     password: dbpass
+
+openapi:
+  oauthflow:
+    authServerUrl: ${spring.keycloak.server-external-url}
+    realm: stock-realm
+
+jwt:
+  auth:
+    converter:
+      resource-id: stock-app
+      principal-attribute: preferred_username

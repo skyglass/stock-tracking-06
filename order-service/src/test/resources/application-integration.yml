@@ -1,0 +1,13 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+  datasource:
+      url: jdbc:postgresql://${app.postgres.host}:${app.postgres.port}/${app.postgres.database}
+      username: ${spring.r2dbc.username}
+      password: ${spring.r2dbc.password}
+
+jwt:
+  auth:
+    converter:
+      principal-attribute: sub

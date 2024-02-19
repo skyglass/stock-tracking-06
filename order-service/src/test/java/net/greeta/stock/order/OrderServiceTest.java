@@ -187,7 +187,6 @@ public class OrderServiceTest extends AbstractIntegrationTest {
 
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void getAllOrdersTest(){
         // order create request
         var request = TestDataUtil.toRequest(1, 1, 2, 3);
