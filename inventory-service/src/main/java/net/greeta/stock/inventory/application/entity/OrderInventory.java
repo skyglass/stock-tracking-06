@@ -1,10 +1,10 @@
 package net.greeta.stock.inventory.application.entity;
 
-import net.greeta.stock.common.messages.inventory.InventoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.greeta.stock.common.domain.dto.inventory.InventoryStatus;
 import org.springframework.data.annotation.Id;
 
 import java.util.UUID;

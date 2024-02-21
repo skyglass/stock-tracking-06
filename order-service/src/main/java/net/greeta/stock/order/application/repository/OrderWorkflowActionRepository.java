@@ -1,7 +1,7 @@
 package net.greeta.stock.order.application.repository;
 
 import net.greeta.stock.order.application.entity.OrderWorkflowAction;
-import net.greeta.stock.order.common.enums.WorkflowAction;
+import net.greeta.stock.common.domain.dto.order.WorkflowAction;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;

@@ -9,69 +9,55 @@ spring:
           default:
             readTimeout: 20000
             connectTimeout: 30000
-          analytics:
-            url: http://localhost:9000/analytics/api
-          basket:
-            url: http://localhost:9000/basket/api
-          basket2:
-            url: http://localhost:9000/basket2/api
-          basket3:
-            url: http://localhost:9000/basket3/api
-          catalog-command:
-            url: http://localhost:9000/catalog-command/api
-          catalog-command2:
-            url: http://localhost:9000/catalog-command2/api
-          catalog-command3:
-            url: http://localhost:9000/catalog-command3/api
-          catalog-query:
-            url: http://localhost:9000/catalog-query/api
-          catalog-query2:
-            url: http://localhost:9000/catalog-query2/api
-          order-processing:
-            url: http://localhost:9000/order-processing/api
-          order-processing2:
-            url: http://localhost:9000/order-processing2/api
+          order:
+            url: http://localhost:9000/order
+          order2:
+            url: http://localhost:9000/order2
+          order3:
+            url: http://localhost:9000/order3
+          inventory:
+            url: http://localhost:9000/inventory
+          inventory2:
+            url: http://localhost:9000/inventory2
+          inventory3:
+            url: http://localhost:9000/inventory3
           oauth2:
             url: http://localhost:8080
           kafka:
             url: http://localhost:8070/api/clusters/local
 
-  data:
-    axon:
-      mongodb:
-        uri: mongodb://${app.axon.mongodb.user}:${app.axon.mongodb.password}@${app.axon.mongodb.host}:${app.axon.mongodb.port}/${app.axon.mongodb.database}?authSource=admin
-        database: ${app.axon.mongodb.database}
-
-    basket:
-      redis:
-        password: ${app.basket.redis.password}
-        host: ${app.basket.redis.host}
-        port: ${app.basket.redis.port}
-
   jpa:
     hibernate:
       ddl-auto: none
   datasource:
-    catalog-command:
-      url: jdbc:postgresql://${app.catalog-command.postgres.host}:${app.catalog-command.postgres.port}/${app.catalog-command.postgres.database}
-      username: ${app.catalog-command.postgres.user}
-      password: ${app.catalog-command.postgres.password}
+    customer-payment:
+      url: jdbc:postgresql://${app.customer-payment.postgres.host}:${app.customer-payment.postgres.port}/${app.customer-payment.postgres.database}
+      username: ${app.customer-payment.postgres.user}
+      password: ${app.customer-payment.postgres.password}
       driver-class-name: org.postgresql.Driver
       hikari:
         connection-timeout: 2000 #ms
         maximum-pool-size: 5
-    catalog-query:
-      url: jdbc:postgresql://${app.catalog-query.postgres.host}:${app.catalog-query.postgres.port}/${app.catalog-query.postgres.database}
-      username: ${app.catalog-query.postgres.user}
-      password: ${app.catalog-query.postgres.password}
+    order:
+      url: jdbc:postgresql://${app.order.postgres.host}:${app.order.postgres.port}/${app.order.postgres.database}
+      username: ${app.order.postgres.user}
+      password: ${app.order.postgres.password}
       driver-class-name: org.postgresql.Driver
       hikari:
         connection-timeout: 2000 #ms
         maximum-pool-size: 5
-    order-processing:
-      url: jdbc:postgresql://${app.order-processing.postgres.host}:${app.order-processing.postgres.port}/${app.order-processing.postgres.database}
-      username: ${app.order-processing.postgres.user}
-      password: ${app.order-processing.postgres.password}
+    inventory:
+      url: jdbc:postgresql://${app.inventory.postgres.host}:${app.inventory.postgres.port}/${app.inventory.postgres.database}
+      username: ${app.inventory.postgres.user}
+      password: ${app.inventory.postgres.password}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        connection-timeout: 2000 #ms
+        maximum-pool-size: 5
+    shipping:
+      url: jdbc:postgresql://${app.shipping.postgres.host}:${app.shipping.postgres.port}/${app.shipping.postgres.database}
+      username: ${app.shipping.postgres.user}
+      password: ${app.shipping.postgres.password}
       driver-class-name: org.postgresql.Driver
       hikari:
         connection-timeout: 2000 #ms
@@ -85,37 +71,15 @@ security:
     password: admin
 
 app:
-  axon:
-    mongodb:
-      host: localhost
-      port: 27017
-      user: user
-      password: pass
-      database: axonframework
-
-  basket:
-    redis:
-      host: localhost
-      port: 6379
-      password: pass
-
-  catalog-command:
+  customer-payment:
     postgres:
       host: localhost
       port: 5432
-      database: stockorderdb
-      user: stockorderdbuser
+      database: customerpaymentdb
+      user: customerpaymentdbuser
       password: dbpass
 
-  catalog-query:
-    postgres:
-      host: localhost
-      port: 5432
-      database: catalogdb
-      user: dbuser
-      password: dbpass
-
-  order-processing:
+  order:
     postgres:
       host: localhost
       port: 5432
@@ -123,4 +87,18 @@ app:
       user: orderdbuser
       password: dbpass
 
+  inventory:
+    postgres:
+      host: localhost
+      port: 5432
+      database: inventorydb
+      user: inventorydbuser
+      password: dbpass
 
+  shipping:
+    postgres:
+      host: localhost
+      port: 5432
+      database: shippingdb
+      user: shippingdbuser
+      password: dbpass

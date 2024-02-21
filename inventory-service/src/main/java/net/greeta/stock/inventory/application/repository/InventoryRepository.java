@@ -1,7 +1,7 @@
 package net.greeta.stock.inventory.application.repository;
 
 
-import net.greeta.stock.common.messages.inventory.InventoryStatus;
+import net.greeta.stock.common.domain.dto.inventory.InventoryStatus;
 import net.greeta.stock.inventory.application.entity.OrderInventory;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;

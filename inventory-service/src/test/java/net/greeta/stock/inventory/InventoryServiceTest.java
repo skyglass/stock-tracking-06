@@ -49,7 +49,7 @@ public class InventoryServiceTest extends AbstractIntegrationTest {
             Assertions.assertEquals(3, e.quantity());
         });
 
-        // check quantity
+        // check availableStock
         this.repository.findById(1)
                        .as(StepVerifier::create)
                        .consumeNextWith(p -> Assertions.assertEquals(7, p.getAvailableQuantity()))
@@ -61,7 +61,7 @@ public class InventoryServiceTest extends AbstractIntegrationTest {
         // restore request
         expectNoResponse(restoreRequest);
 
-        // check quantity
+        // check availableStock
         this.repository.findById(1)
                        .as(StepVerifier::create)
                        .consumeNextWith(p -> Assertions.assertEquals(10, p.getAvailableQuantity()))

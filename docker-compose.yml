@@ -17,12 +17,18 @@ services:
       POSTGRES_PASSWORD: dbpass
       POSTGRES_USER: dbuser
       PGTZ: Europe/Amsterdam
-      PRODUCT_DB_USER: productdbuser
-      PRODUCT_DB_PASSWORD: dbpass
-      PRODUCT_DB_NAME: productdb
+      CUSTOMER_PAYMENT_DB_USER: customerpaymentdbuser
+      CUSTOMER_PAYMENT_DB_PASSWORD: dbpass
+      CUSTOMER_PAYMENT_DB_NAME: customerpaymentdb
       ORDER_DB_USER: orderdbuser
       ORDER_DB_PASSWORD: dbpass
       ORDER_DB_NAME: orderdb
+      INVENTORY_DB_USER: inventorydbuser
+      INVENTORY_DB_PASSWORD: dbpass
+      INVENTORY_DB_NAME: inventorydb
+      SHIPPING_DB_USER: shippingdbuser
+      SHIPPING_DB_PASSWORD: dbpass
+      SHIPPING_DB_NAME: shippingdb
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U dbuser" ]
       interval: 10s
@@ -73,18 +79,6 @@ services:
       - keycloak-postgres
     healthcheck:
       test: "curl -f http://stock-keycloak:8080/health/ready || exit 1"
-    networks:
-      - stock
-
-
-  zipkin:
-    image: openzipkin/zipkin:2.24.3
-    container_name: zipkin
-    restart: unless-stopped
-    ports:
-      - "9411:9411"
-    healthcheck:
-      test: [ "CMD", "nc", "-z", "localhost", "9411" ]
     networks:
       - stock
 
@@ -167,42 +161,6 @@ services:
     networks:
       - stock
 
-  init-kafka:
-    image: confluentinc/cp-kafka:7.1.0
-    entrypoint: [ '/bin/sh', '-c' ]
-    command: |
-      "
-      # block until kafka is reachable
-      kafka-topics --bootstrap-server stock-kafka1:29092 --list
-
-      echo -e 'Deleting kafka topics'
-      kafka-topics --bootstrap-server stock-kafka1:29092 --topic stock-add-request --delete --if-exists
-      kafka-topics --bootstrap-server stock-kafka1:29092 --topic stock-add-response --delete --if-exists
-      kafka-topics --bootstrap-server stock-kafka1:29092 --topic stock-remove-request --delete --if-exists
-      kafka-topics --bootstrap-server stock-kafka1:29092 --topic stock-remove-response --delete --if-exists   
-      kafka-topics --bootstrap-server stock-kafka1:29092 --topic customer --delete --if-exists
-      kafka-topics --bootstrap-server stock-kafka1:29092 --topic debezium.order.stock_add_outbox --delete --if-exists
-      kafka-topics --bootstrap-server stock-kafka1:29092 --topic debezium.order.stock_remove_outbox --delete --if-exists
-      kafka-topics --bootstrap-server stock-kafka1:29092 --topic debezium.stock.stock_added_outbox --delete --if-exists
-      kafka-topics --bootstrap-server stock-kafka1:29092 --topic debezium.stock.stock_removed_outbox --delete --if-exists      
-
-      echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic stock-add-request --replication-factor 2 --partitions 2
-      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic stock-add-response --replication-factor 2 --partitions 2
-      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic stock-remove-request --replication-factor 2 --partitions 2
-      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic stock-remove-response --replication-factor 2 --partitions 2      
-      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic customer --replication-factor 2 --partitions 2
-      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic debezium.order.stock_add_outbox --replication-factor 2 --partitions 2
-      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic debezium.order.stock_remove_outbox --replication-factor 2 --partitions 2
-      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic debezium.stock.stock_added_outbox --replication-factor 2 --partitions 2
-      kafka-topics --bootstrap-server stock-kafka1:29092 --create --if-not-exists --topic debezium.stock.stock_removed_outbox --replication-factor 2 --partitions 2      
-
-      echo -e 'Successfully created the following topics:'
-      kafka-topics --bootstrap-server stock-kafka1:29092 --list
-      "
-    networks:
-      - stock
-
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui
@@ -214,26 +172,5 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "stock-kafka1:29092,stock-kafka2:29093"
       KAFKA_CLUSTERS_0_ZOOKEEPER: "stock-zookeeper:2181"
       KAFKA_CLUSTERS_0_METRICS_PORT: 9011
-    networks:
-      - stock
-
-  stock-connect:
-    image: debezium/connect:2.2
-    container_name: stock-connect
-    restart: always
-    ports:
-      - 8083:8083
-    environment:
-      GROUP_ID: 1
-      CONFIG_STORAGE_TOPIC: connect_configs
-      OFFSET_STORAGE_TOPIC: connect_offsets
-      STATUS_STORAGE_TOPIC: connect_statuses
-      BOOTSTRAP_SERVERS: "stock-kafka1:29092,stock-kafka2:29093"
-      JMXPORT: 9012
-      JMXHOST: stock-connect
-      LOGGING_LEVEL: "DEBUG"
-    depends_on:
-      - stock-kafka1
-      - stock-kafka2
     networks:
       - stock

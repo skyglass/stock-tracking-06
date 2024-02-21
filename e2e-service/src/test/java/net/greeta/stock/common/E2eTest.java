@@ -7,15 +7,15 @@ import net.greeta.stock.catalogcommand.CatalogCommandTestDataService;
 import net.greeta.stock.catalogquery.CatalogQueryTestDataService;
 import net.greeta.stock.client.KafkaClient;
 import net.greeta.stock.config.MockHelper;
-import net.greeta.stock.config.RedisConfig;
+import net.greeta.stock.customerpayment.CustomerPaymentTestDataService;
+import net.greeta.stock.inventory.InventoryTestDataService;
+import net.greeta.stock.order.OrderTestDataService;
 import net.greeta.stock.orderprocessing.OrderProcessingTestDataService;
+import net.greeta.stock.shipping.ShippingTestDataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,34 +31,25 @@ public abstract class E2eTest {
     private MockHelper mockHelper;
 
     @Autowired
-    private BasketTestDataService basketTestDataService;
+    private CustomerPaymentTestDataService customerPaymentTestDataService;
 
     @Autowired
-    protected CatalogCommandTestDataService catalogCommandTestDataService;
+    private InventoryTestDataService inventoryTestDataService;
 
     @Autowired
-    protected CatalogQueryTestDataService catalogQueryTestDataService;
+    private OrderTestDataService orderTestDataService;
 
     @Autowired
-    private OrderProcessingTestDataService orderProcessingTestDataService;
-
-    @Autowired
-    private AxonTestDataService axonTestDataService;
-
-    @Autowired
-    private KafkaClient kafkaClient;
+    private ShippingTestDataService shippingTestDataService;
 
     @BeforeEach
     @SneakyThrows
     void cleanup() {
-        var result = kafkaClient.clearMessages("Axon.Events");
-        assertEquals(HttpStatus.OK, result.getStatusCode());
         mockHelper.mockCredentials(securityOauth2Username, securityOauth2Password);
-        basketTestDataService.resetDatabase();
-        catalogCommandTestDataService.resetDatabase();
-        catalogQueryTestDataService.resetDatabase();
-        orderProcessingTestDataService.resetDatabase();
-        axonTestDataService.resetDatabase();
+        orderTestDataService.resetDatabase();
+        inventoryTestDataService.resetDatabase();
+        shippingTestDataService.resetDatabase();
+        customerPaymentTestDataService.resetDatabase();
         //TimeUnit.MILLISECONDS.sleep(Duration.ofSeconds(1).toMillis());
     }
 }

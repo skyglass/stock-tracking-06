@@ -1,13 +1,8 @@
 package net.greeta.stock.order.application.mapper;
 
+import net.greeta.stock.common.domain.dto.order.*;
 import net.greeta.stock.order.application.entity.OrderWorkflowAction;
 import net.greeta.stock.order.application.entity.PurchaseOrder;
-import net.greeta.stock.order.common.dto.OrderCreateRequest;
-import net.greeta.stock.order.common.dto.OrderDetails;
-import net.greeta.stock.order.common.dto.OrderWorkflowActionDto;
-import net.greeta.stock.order.common.dto.PurchaseOrderDto;
-import net.greeta.stock.order.common.enums.OrderStatus;
-import net.greeta.stock.order.common.enums.WorkflowAction;
 
 import java.time.Instant;
 import java.util.List;

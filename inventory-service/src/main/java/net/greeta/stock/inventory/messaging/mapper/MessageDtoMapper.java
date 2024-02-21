@@ -2,8 +2,8 @@ package net.greeta.stock.inventory.messaging.mapper;
 
 import net.greeta.stock.common.messages.inventory.InventoryRequest;
 import net.greeta.stock.common.messages.inventory.InventoryResponse;
-import net.greeta.stock.inventory.common.dto.InventoryDeductRequest;
-import net.greeta.stock.inventory.common.dto.OrderInventoryDto;
+import net.greeta.stock.common.domain.dto.inventory.InventoryDeductRequest;
+import net.greeta.stock.common.domain.dto.inventory.OrderInventoryDto;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Function;

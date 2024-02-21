@@ -1,6 +1,6 @@
 package net.greeta.stock.order;
 
-import net.greeta.stock.order.common.dto.OrderCreateRequest;
+import net.greeta.stock.common.domain.dto.order.OrderCreateRequest;
 
 public class TestDataUtil {
 

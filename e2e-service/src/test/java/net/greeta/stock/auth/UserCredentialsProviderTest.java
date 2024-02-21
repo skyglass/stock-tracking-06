@@ -1,7 +1,6 @@
 package net.greeta.stock.auth;
 
 import net.greeta.stock.config.MockHelper;
-import net.greeta.stock.config.RedisConfig;
 import net.greeta.stock.config.auth.UserCredentialsProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

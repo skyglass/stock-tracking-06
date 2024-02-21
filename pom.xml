@@ -26,14 +26,14 @@
     </properties>
 
     <modules>
-        <module>common</module>
+        <module>common-domain</module>
         <module>orchestrator-common</module>
-        <module>customer-payment</module>
+        <module>customer-payment-service</module>
         <module>inventory-service</module>
         <module>shipping-service</module>
         <module>order-service</module>
         <module>gateway-service</module>
-        <!-- <module>e2e-service</module> -->
+        <module>e2e-service</module>
     </modules>
 
     <dependencyManagement>
@@ -44,17 +44,6 @@
                 <artifactId>common-domain</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>net.greeta.stock</groupId>
-                <artifactId>common-application</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.greeta.stock</groupId>
-                <artifactId>common-messaging</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>net.greeta.stock</groupId>
                 <artifactId>orchestrator-common</artifactId>

@@ -4,7 +4,7 @@ import net.greeta.stock.common.messages.Request;
 import net.greeta.stock.common.messages.payment.PaymentResponse;
 import net.greeta.stock.common.orchestrator.RequestCompensator;
 import net.greeta.stock.common.orchestrator.RequestSender;
-import net.greeta.stock.order.common.enums.WorkflowAction;
+import net.greeta.stock.common.domain.dto.order.WorkflowAction;
 import net.greeta.stock.order.common.service.OrderFulfillmentService;
 import net.greeta.stock.order.common.service.WorkflowActionTracker;
 import net.greeta.stock.order.messaging.mapper.MessageDtoMapper;

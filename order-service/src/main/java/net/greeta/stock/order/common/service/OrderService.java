@@ -1,8 +1,8 @@
 package net.greeta.stock.order.common.service;
 
-import net.greeta.stock.order.common.dto.OrderCreateRequest;
-import net.greeta.stock.order.common.dto.OrderDetails;
-import net.greeta.stock.order.common.dto.PurchaseOrderDto;
+import net.greeta.stock.common.domain.dto.order.OrderCreateRequest;
+import net.greeta.stock.common.domain.dto.order.OrderDetails;
+import net.greeta.stock.common.domain.dto.order.PurchaseOrderDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

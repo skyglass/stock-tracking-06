@@ -1,6 +1,6 @@
 package net.greeta.stock.order.application.entity;
 
-import net.greeta.stock.order.common.enums.OrderStatus;
+import net.greeta.stock.common.domain.dto.order.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

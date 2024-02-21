@@ -1,7 +1,7 @@
 package net.greeta.stock.order.application.repository;
 
 import net.greeta.stock.order.application.entity.PurchaseOrder;
-import net.greeta.stock.order.common.enums.OrderStatus;
+import net.greeta.stock.common.domain.dto.order.OrderStatus;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;

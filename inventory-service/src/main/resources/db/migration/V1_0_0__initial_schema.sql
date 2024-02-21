@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS order_inventory;
 
 CREATE TABLE product (
                          id SERIAL NOT NULL,
+                         version TIMESTAMP default now(),
                          description VARCHAR(50),
                          available_quantity int,
                          CONSTRAINT product_pk PRIMARY KEY (id)
@@ -22,6 +23,6 @@ CREATE TABLE order_inventory (
 
 insert into product(description, available_quantity)
 values
-    ('book', 10),
-    ('pen', 10),
-    ('rug', 10);
+    ('book', 20),
+    ('pen', 20),
+    ('rug', 20);

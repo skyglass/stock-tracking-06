@@ -5,12 +5,11 @@ import net.greeta.stock.common.messages.inventory.InventoryResponse;
 import net.greeta.stock.common.messages.payment.PaymentRequest;
 import net.greeta.stock.common.messages.payment.PaymentResponse;
 import net.greeta.stock.common.messages.shipping.ShippingResponse;
-import net.greeta.stock.order.common.dto.OrderWorkflowActionDto;
-import net.greeta.stock.order.common.enums.OrderStatus;
-import net.greeta.stock.order.common.enums.WorkflowAction;
+import net.greeta.stock.common.domain.dto.order.OrderWorkflowActionDto;
+import net.greeta.stock.common.domain.dto.order.OrderStatus;
+import net.greeta.stock.common.domain.dto.order.WorkflowAction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.Instant;
 import java.util.List;

@@ -15,6 +15,16 @@ spring:
     password: ${spring.r2dbc.password}
     url: ${spring.r2dbc.url}
 
+  keycloak:
+    server-url: http://localhost:8080
+    server-external-url: http://localhost:8080
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${spring.keycloak.server-external-url}/realms/stock-realm
+          jwk-set-uri: ${spring.keycloak.server-url}/realms/stock-realm/protocol/openid-connect/certs
+
 
   cloud:
     function:
@@ -48,3 +58,14 @@ app:
     database: inventorydb
     user: inventorydbuser
     password: dbpass
+
+openapi:
+  oauthflow:
+    authServerUrl: ${spring.keycloak.server-external-url}
+    realm: stock-realm
+
+jwt:
+  auth:
+    converter:
+      resource-id: stock-app
+      principal-attribute: preferred_username

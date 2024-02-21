@@ -2,9 +2,9 @@ package net.greeta.stock.order.application.service;
 
 import net.greeta.stock.order.application.mapper.EntityDtoMapper;
 import net.greeta.stock.order.application.repository.PurchaseOrderRepository;
-import net.greeta.stock.order.common.dto.OrderCreateRequest;
-import net.greeta.stock.order.common.dto.OrderDetails;
-import net.greeta.stock.order.common.dto.PurchaseOrderDto;
+import net.greeta.stock.common.domain.dto.order.OrderCreateRequest;
+import net.greeta.stock.common.domain.dto.order.OrderDetails;
+import net.greeta.stock.common.domain.dto.order.PurchaseOrderDto;
 import net.greeta.stock.order.common.service.OrderEventListener;
 import net.greeta.stock.order.common.service.OrderService;
 import net.greeta.stock.order.common.service.WorkflowActionRetriever;

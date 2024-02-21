@@ -5,7 +5,7 @@ import net.greeta.stock.common.messages.payment.PaymentRequest;
 import net.greeta.stock.common.messages.shipping.ShippingRequest;
 import net.greeta.stock.common.messages.shipping.ShippingResponse;
 import net.greeta.stock.order.common.dto.OrderShipmentSchedule;
-import net.greeta.stock.order.common.dto.PurchaseOrderDto;
+import net.greeta.stock.common.domain.dto.order.PurchaseOrderDto;
 
 import java.util.UUID;
 

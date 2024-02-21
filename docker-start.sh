@@ -4,29 +4,21 @@ docker-compose up -d
 
 mvn clean install -DskipTests
 
-cd analytics-service
+cd customer-payment-service
 mvn spring-boot:build-image -DskipTests \
-  -Dspring-boot.build-image.imageName=analytics-service
+  -Dspring-boot.build-image.imageName=customer-payment-service
 
-cd ../basket-service
+cd ../inventory-service
 mvn spring-boot:build-image -DskipTests \
-  -Dspring-boot.build-image.imageName=basket-service
+  -Dspring-boot.build-image.imageName=inventory-service
 
-cd ../catalog-command-service
+cd ../order-service
 mvn spring-boot:build-image -DskipTests \
-  -Dspring-boot.build-image.imageName=catalog-command-service
+  -Dspring-boot.build-image.imageName=order-service
 
-cd ../catalog-query-service
+cd ../shipping-service
 mvn spring-boot:build-image -DskipTests \
-  -Dspring-boot.build-image.imageName=catalog-query-service
-
-cd ../order-processing-service
-mvn spring-boot:build-image -DskipTests \
-  -Dspring-boot.build-image.imageName=order-processing-service
-
-cd ../payment-service
-mvn spring-boot:build-image -DskipTests \
-  -Dspring-boot.build-image.imageName=payment-service
+  -Dspring-boot.build-image.imageName=shipping-service
 
 cd ../gateway-service
 mvn spring-boot:build-image -DskipTests \

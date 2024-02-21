@@ -1,7 +1,7 @@
 package net.greeta.stock.order.messaging.publisher;
 
 import net.greeta.stock.common.publisher.EventPublisher;
-import net.greeta.stock.order.common.dto.PurchaseOrderDto;
+import net.greeta.stock.common.domain.dto.order.PurchaseOrderDto;
 import net.greeta.stock.order.common.service.OrderEventListener;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
