@@ -52,7 +52,7 @@ public class InventoryServiceTest extends AbstractIntegrationTest {
         // check availableStock
         this.repository.findById(1)
                        .as(StepVerifier::create)
-                       .consumeNextWith(p -> Assertions.assertEquals(7, p.getAvailableQuantity()))
+                       .consumeNextWith(p -> Assertions.assertEquals(17, p.getAvailableQuantity()))
                        .verifyComplete();
 
         // duplicate request
@@ -64,7 +64,7 @@ public class InventoryServiceTest extends AbstractIntegrationTest {
         // check availableStock
         this.repository.findById(1)
                        .as(StepVerifier::create)
-                       .consumeNextWith(p -> Assertions.assertEquals(10, p.getAvailableQuantity()))
+                       .consumeNextWith(p -> Assertions.assertEquals(20, p.getAvailableQuantity()))
                        .verifyComplete();
 
     }
@@ -78,7 +78,7 @@ public class InventoryServiceTest extends AbstractIntegrationTest {
                        .map(Product::getAvailableQuantity)
                        .distinct()
                        .as(StepVerifier::create)
-                       .consumeNextWith(b -> Assertions.assertEquals(10, b))
+                       .consumeNextWith(b -> Assertions.assertEquals(20, b))
                        .verifyComplete();
     }
 

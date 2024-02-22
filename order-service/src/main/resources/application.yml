@@ -14,7 +14,7 @@ spring:
     locations: classpath:db/migration
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
-    url: ${spring.r2dbc.url}
+    url: jdbc:postgresql://${app.postgres.host}:${app.postgres.port}/${app.postgres.database}
 
   keycloak:
     server-url: http://localhost:8080
@@ -33,6 +33,9 @@ spring:
       default:
         producer:
           useNativeEncoding: true
+          partition-count: 2
+        consumer:
+          concurrency: 2
       bindings:
         orderOrchestrator-in-0:
           destination: payment-response,inventory-response,shipping-response
@@ -45,6 +48,9 @@ spring:
           destination: shipping-request
       kafka:
         binder:
+          autoCreateTopics: true
+          replicationFactor: 2
+          brokers: ${app.kafka.brokers}
           consumer-properties:
             "value.deserializer": org.springframework.kafka.support.serializer.JsonDeserializer
             "key.deserializer": org.apache.kafka.common.serialization.StringDeserializer
@@ -61,6 +67,9 @@ app:
     database: orderdb
     user: orderdbuser
     password: dbpass
+
+  kafka:
+    brokers: "stock-kafka1:29092,stock-kafka2:29093"
 
 openapi:
   oauthflow:

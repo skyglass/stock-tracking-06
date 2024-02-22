@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS order_inventory;
 
 CREATE TABLE product (
                          id SERIAL NOT NULL,
-                         version TIMESTAMP default now(),
+                         version int,
                          description VARCHAR(50),
                          available_quantity int,
                          CONSTRAINT product_pk PRIMARY KEY (id)

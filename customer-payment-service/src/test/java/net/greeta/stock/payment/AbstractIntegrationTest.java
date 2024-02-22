@@ -1,5 +1,6 @@
 package net.greeta.stock.payment;
 
+import org.junit.BeforeClass;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
@@ -17,12 +18,11 @@ import org.testcontainers.utility.DockerImageName;
 @SpringBootTest(properties = {
 		"logging.level.root=ERROR",
 		"logging.level.net.greeta.stock*=INFO",
-		"spring.cloud.stream.kafka.binder.configuration.auto.offset.reset=earliest"
+		"spring.cloud.stream.kafka.binder.configuration.auto.offset.reset=earliest",
+		"spring.cloud.stream.kafka.binder.brokers=localhost:9092",
+		"spring.cloud.stream.kafka.binder.replicationFactor=1"
 })
-@EmbeddedKafka(
-		partitions = 1,
-		bootstrapServersProperty = "spring.kafka.bootstrap-servers"
-)
+@EmbeddedKafka
 @Testcontainers
 public abstract class AbstractIntegrationTest {
 
