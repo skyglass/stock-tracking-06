@@ -69,7 +69,7 @@ public class InventoryServiceTest extends AbstractIntegrationTest {
 
     }
 
-    @Test // please remove this - not a good fit for embedded kafka test. should be covered as part of unit tests
+    @Test
     public void restoreWithoutDeductTest(){
         var orderId = UUID.randomUUID();
         var restoreRequest = TestDataUtil.createRestoreRequest(orderId);
@@ -85,7 +85,7 @@ public class InventoryServiceTest extends AbstractIntegrationTest {
     @Test
     public void outOfStockErrorTest(){
         var orderId = UUID.randomUUID();
-        var deductRequest = TestDataUtil.createDeductRequest(orderId, 2, 11);
+        var deductRequest = TestDataUtil.createDeductRequest(orderId, 2, 21);
         expectResponse(deductRequest, InventoryResponse.Declined.class, e -> {
             Assertions.assertEquals(orderId, e.orderId());
             Assertions.assertEquals("Out of stock", e.message());
@@ -102,7 +102,7 @@ public class InventoryServiceTest extends AbstractIntegrationTest {
                 .verifyComplete();
     }
 
-    private void expectNoResponse(Request request){
+    private void expectNoResponse(Request request) {
         resFlux
                 .doFirst(() -> this.streamBridge.send("inventory-request", request))
                 .timeout(Duration.ofSeconds(2), Mono.empty())

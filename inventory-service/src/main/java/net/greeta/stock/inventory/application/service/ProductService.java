@@ -28,13 +28,14 @@ public class ProductService {
 
     @Transactional
     public Mono<OrderInventoryDto> deductStock(InventoryDeductRequest request) {
+        log.info("ProductService.deductStock started for request {}", request);
         return updateStock(request.productId(), request.quantity())
-                .flatMap(p -> {
-                    var orderInventory = EntityDtoMapper.toOrderInventory(request);
-                    orderInventory.setStatus(InventoryStatus.DEDUCTED);
-                    return this.inventoryRepository.save(orderInventory);
-                })
-                .map(EntityDtoMapper::toDto);
+                .then(deductInventory(request));
+    }
+
+    private Mono<OrderInventoryDto> deductInventory(InventoryDeductRequest request) {
+        var orderInventory = EntityDtoMapper.toOrderInventory(request);
+        return updateInventory(orderInventory, InventoryStatus.DEDUCTED);
     }
 
     @Transactional
@@ -46,15 +47,21 @@ public class ProductService {
     public Mono<OrderInventoryDto> restore(UUID orderId) {
         return this.inventoryRepository.findByOrderIdAndStatus(orderId, InventoryStatus.DEDUCTED)
                 .doOnNext(i -> updateStock(i.getProductId(), -i.getQuantity()))
-                .flatMap(inventory -> {
-                    inventory.setStatus(InventoryStatus.RESTORED);
-                    return this.inventoryRepository.save(inventory);
-                })
+                .flatMap(i -> restoreInventory(i))
                 .doOnNext(i -> {
                     log.info("restored stock quantity {} for order {} and product {}",
-                            i.getQuantity(), i.getOrderId(), i.getProductId());
-                })
-                .map(i -> EntityDtoMapper.toDto(i));
+                            i.quantity(), i.orderId(), i.productId());
+                });
+    }
+
+    private Mono<OrderInventoryDto> restoreInventory(OrderInventory orderInventory) {
+        return updateInventory(orderInventory, InventoryStatus.RESTORED);
+    }
+
+    private Mono<OrderInventoryDto> updateInventory(OrderInventory orderInventory, InventoryStatus status) {
+        orderInventory.setStatus(status);
+        return this.inventoryRepository.save(orderInventory)
+                .map(EntityDtoMapper::toDto);
     }
 
     private Mono<ProductInventoryDto> updateStock(Integer productId, Integer updateQuantity) {
@@ -62,22 +69,16 @@ public class ProductService {
         return productRepository.findById(productId)
                 .filter(p -> p.getAvailableQuantity() >= updateQuantity)
                 .switchIfEmpty(OUT_OF_STOCK)
-                .flatMap(p -> {
-                    p.setAvailableQuantity(p.getAvailableQuantity() - updateQuantity);
-                    return productRepository.save(p);
-                })
-                .map(p -> EntityDtoMapper.toProductInventoryDto(p, status))
+                .flatMap(p -> updateProductInventory(p, updateQuantity, status))
                 .doOnNext(dto -> log.info(
                         "ProductService.updateStock: updated availableStock {} for product {}",
                         dto.availableStock(), dto.productId()));
     }
 
-    private Mono<OrderInventoryDto> restore(OrderInventory orderInventory, Product product) {
-        product.setAvailableQuantity(product.getAvailableQuantity() + orderInventory.getQuantity());
-        orderInventory.setStatus(InventoryStatus.RESTORED);
+    private Mono<ProductInventoryDto> updateProductInventory(Product product, Integer updateQuantity, InventoryStatus status) {
+        product.setAvailableQuantity(product.getAvailableQuantity() - updateQuantity);
         return this.productRepository.save(product)
-                .then(this.inventoryRepository.save(orderInventory))
-                .map(EntityDtoMapper::toDto);
+                .map(p -> EntityDtoMapper.toProductInventoryDto(p, status));
     }
 
 }

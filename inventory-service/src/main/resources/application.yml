@@ -4,9 +4,10 @@ spring:
     password: ${app.postgres.password}
     url: r2dbc:postgresql://${app.postgres.host}:${app.postgres.port}/${app.postgres.database}
     pool:
+      enabled: true
       max-create-connection-time: 2s
-      initial-size: 5
-      max-size: 10
+      initial-size: 10
+      max-size: 20
 
   flyway:
     enabled: true
